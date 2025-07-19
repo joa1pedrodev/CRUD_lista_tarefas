@@ -35,7 +35,7 @@ class _HomeState extends State<Home> {
     tarefa["realizada"] = false;
     _listaTarefas.add(tarefa);
 
-    //Salva a lista de tarefas113
+    //Salva a lista de tarefas
     String dados = json.encode(_listaTarefas);
     arquivo.writeAsString(dados);
   }
