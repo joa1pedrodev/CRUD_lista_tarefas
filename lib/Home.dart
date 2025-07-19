@@ -14,7 +14,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   List _listaTarefas = [];
-  //TextEditingController _controllerTarefa = TextEditingController();
+  TextEditingController _controllerTarefa = TextEditingController();
 
   //Retorna um arquivo
   Future<File> _getFile() async { 
@@ -23,19 +23,28 @@ class _HomeState extends State<Home> {
     return File("${diretorio.path}/_listaTarefas"); //Retorna os arquivos salvos
   
   }
+  //Adiciona o que foi digitado na lista de tarefas
+  _salvarTarefa(){
+    String textoDigitado = _controllerTarefa.text;
+ 
+    Map<String, dynamic> tarefa = Map();
+    tarefa["titulo"] = textoDigitado;
+    tarefa["realizada"] = false;
 
+    setState(() {
+      _listaTarefas.add(tarefa);
+    });
+
+    
+    _salvarArquivo();
+    _controllerTarefa.text = "";
+  }
+
+  //Captura a lista de tarefas e salva dentro do arquivo
   _salvarArquivo() async {
 
     var arquivo = await _getFile();
 
-
-    //Criar dados
-    Map<String, dynamic> tarefa = Map();
-    tarefa["titulo"] = "Ir ao mercado";
-    tarefa["realizada"] = false;
-    _listaTarefas.add(tarefa);
-
-    //Salva a lista de tarefas
     String dados = json.encode(_listaTarefas);
     arquivo.writeAsString(dados);
   }
@@ -103,7 +112,10 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.deepOrange,
         elevation: 6,
         //mini: true,
-        child: Icon(Icons.add, color: Colors.white),
+        child: Icon(
+          Icons.add, 
+          color: Colors.white
+          ),
         onPressed: (){
           showDialog(
             context: context, 
@@ -111,7 +123,7 @@ class _HomeState extends State<Home> {
               return AlertDialog(
                 title: Text("Adicionar Tarefa"),
                 content: TextField(
-                  //controller: _controllerTarefa, 
+                  controller: _controllerTarefa, 
                   decoration: InputDecoration(
                     labelText: ("Digite sua tarefa")
                   ),
@@ -126,7 +138,8 @@ class _HomeState extends State<Home> {
                     ),
                   TextButton(
                     onPressed: (){
-                      //salvar
+                      //salvar e fechar o AlertDialog
+                      _salvarTarefa();
                       Navigator.pop(context);
                     }, 
                     child: Text("Salvar")
