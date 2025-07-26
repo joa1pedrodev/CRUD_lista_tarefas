@@ -96,9 +96,26 @@ class _HomeState extends State<Home> {
               child: ListView.builder(
                 itemCount: _listaTarefas.length,
                 itemBuilder: (context, index){
-                  return ListTile(
-                    title: Text(_listaTarefas[index]["titulo"]),
+                  
+                  return CheckboxListTile(
+                    title: Text(_listaTarefas[index]['titulo']),
+                    value: _listaTarefas[index]['realizada'],
+                    onChanged: (valorAlterado){
+                      _listaTarefas[index]['realizada'] = valorAlterado;
+                      
+                        setState(() {
+                          _listaTarefas[index]['realizada'] = valorAlterado;
+                        });
+                      
+                      _salvarArquivo();
+
+                    },
+                    
                   );
+
+                  /*return ListTile(
+                    title: Text(_listaTarefas[index]["titulo"]),
+                  );*/
                 }
                 )
               )
@@ -127,9 +144,7 @@ class _HomeState extends State<Home> {
                   decoration: InputDecoration(
                     labelText: ("Digite sua tarefa")
                   ),
-                  onChanged: (text){
-
-                  },
+                  onChanged: (text){},
                 ),
                 actions: [
                   TextButton(
